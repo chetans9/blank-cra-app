@@ -1,0 +1,53 @@
+import React from "react";
+import { Controller, Control, FieldValues, FieldError } from "react-hook-form";
+import { FormControl, InputLabel, MenuItem, Select, SelectProps, FormHelperText } from "@mui/material";
+
+interface Option {
+  label: string;
+  value: string | number;
+}
+
+interface RHFSelectProps extends SelectProps {
+  name: string;
+  control: Control<FieldValues>;
+  label?: string;
+  options: Option[];
+  defaultValue?: string | number;
+  rules?: Record<string, unknown>;
+  error?: FieldError | boolean;
+  helperText?: string;
+}
+
+const RHFSelect: React.FC<RHFSelectProps> = ({
+  name,
+  control,
+  label,
+  options = [],
+  defaultValue = "",
+  rules = {},
+  error,
+  helperText,
+  ...rest
+}) => (
+  <FormControl fullWidth error={!!error}>
+    {label && <InputLabel>{label}</InputLabel>}
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={defaultValue}
+      rules={rules}
+      render={({ field }) => (
+        <Select {...field} {...rest}>
+          {options.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      )}
+    />
+    {helperText && <FormHelperText>{helperText}</FormHelperText>}
+  </FormControl>
+);
+
+export default RHFSelect;
